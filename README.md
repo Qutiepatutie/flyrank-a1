@@ -33,6 +33,20 @@ Keep-Alive: timeout=5
 
 [{"id":1,"title":"study","done":false},{"id":2,"title":"work on project","done":true},{"id":3,"title":"code","done":false}]
 ```
+```
+curl -i http://localhost:3000/tasks?done=true
+
+> HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 48
+ETag: W/"30-VXBMCS1oBHC3TzQFmSmsIXwhGn8"
+Date: Sat, 18 Jul 2026 17:28:52 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"id":2,"title":"work on project","done":true}]
+```
 ### Swagger UI
 
 ![Logo](assets/swagger_ui.JPG)

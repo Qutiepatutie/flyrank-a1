@@ -61,6 +61,24 @@
         "/tasks":{
             "get": {
                 "summary":"Returns a list of tasks",
+                "parameters":[
+                    {
+                        "name":"title",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name":"done",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description":"A list of tasks",

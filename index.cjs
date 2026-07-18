@@ -1,3 +1,4 @@
+
 const express = require('express');
 const app = express();
 const port = 3000;
@@ -45,8 +46,35 @@ app.get('/health', (req, res) => {
 
 // STAGE 2
 
-app.get('/tasks', (req, res) => {
-    res.status(200).send(tasks);
+// app.get('/tasks', (req, res) => {
+//     res.status(200).send(tasks);   // Commented for documentation
+// });
+
+// Extra feature
+
+app.get('/tasks', (req, res) => {    
+    const title = req.query.title?.trim().toLowerCase();
+    const done = req.query.done?.trim().toLowerCase();
+
+    let result = tasks;
+
+    if (title) {
+        result = result.filter(task => { 
+            if (task.title.toLowerCase().includes(title)) {
+                return task;
+            }
+        });
+    }
+
+    if (done) {
+        result = result.filter(task => { 
+            if (String(task.done) === done) {
+                return task;
+            }
+        });
+    }
+
+    res.status(200).send(result);
 });
 
 app.get('/tasks/:id', (req, res) => {
