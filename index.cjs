@@ -2,8 +2,12 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+const swaggerUI = require('swagger-ui-express');
+const swaggerDoc = require('./swagger.json');
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
 
 let tasks = [
         {
@@ -100,27 +104,27 @@ app.put('/tasks/:id', (req, res) => {
             return ({
                 ...prev,
                 title: newTitle ? newTitle : prev.title,
-                done: done ?? prev.done
+                    done: done ?? prev.done
             });
         }
         return prev;
     });
 
-    const updatedTask = tasks.filter(task => task.id === id)
+    const updatedTask = tasks.find(task => task.id === id)
 
-    res.status(200).send(JSON.stringify(updatedTask));
+    res.status(200).send(updatedTask);
 })
 
 app.delete('/tasks/:id', (req, res) => {
     const id = Number(req.params.id);
 
     if (!tasks.find(task => task.id === id)) {
-        return res.status(404).send(res.body);
+        return res.status(404).send();
     }
 
     tasks = tasks.filter(task => task.id !== id);
 
-    res.status(204).send(tasks);
+    res.status(204).send();
 })
 
 app.listen(port, () => {

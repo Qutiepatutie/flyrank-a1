@@ -1,0 +1,284 @@
+{
+    "openapi": "3.0.4",
+    "info": {
+        "title": "Flyrank A1 - CRUD API",
+        "version": "1.0"
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "summary": "Returns API description",
+                "responses": {
+                    "200": {
+                        "description": "API description",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type":"object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "version": {
+                                            "type": "string"
+                                        },
+                                        "endpoints": {
+                                            "type": "array",
+                                            "items": {
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/health":{
+            "get": {
+                "summary": "Returns api status",
+                "responses": {
+                    "200": {
+                        "description": "api status",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks":{
+            "get": {
+                "summary":"Returns a list of tasks",
+                "responses": {
+                    "200": {
+                        "description":"A list of tasks",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type":"object",
+                                        "properties": {
+                                            "id": {
+                                                "type":"integer"
+                                            },
+                                            "title": {
+                                                "type":"string"
+                                            },
+                                            "done": {
+                                                "type":"boolean"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Creates a new task",
+                "requestBody": {
+                    "description": "Title of task to be added",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Newly created task",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type":"integer"
+                                        },
+                                        "title": {
+                                            "type":"string"
+                                        },
+                                        "done": {
+                                            "type":"boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Empty title",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/{id}": {
+            "get": {
+                "summary": "Returns a  task by id",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A task",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type":"integer"
+                                        },
+                                        "title": {
+                                            "type":"string"
+                                        },
+                                        "done": {
+                                            "type":"boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "ID not found",
+                        "content":{
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type":"string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Updates a task through ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "New task data",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type":"object",
+                                "properties": {
+                                    "title": {
+                                        "type":"string"
+                                    },
+                                    "done": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Task is updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "done": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Body is empty"
+                    },
+                    "404": {
+                        "description": "ID not found"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletes a task by ID",
+                "parameters": [
+                    {
+                        "name":"id",
+                        "in": "path",
+                        "required":true,
+                        "schema": {
+                            "type":"integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successfully deleted a task"
+                    },
+                    "404": {
+                        "description": "ID not found"
+                    }
+                }
+            }
+        }
+    } 
+}
