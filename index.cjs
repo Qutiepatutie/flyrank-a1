@@ -23,6 +23,8 @@ let tasks = [
         }
 ]
 
+// STAGE 1
+
 app.get('/', (req, res) => {
     res.status(200).send({
         name: "Task API",
@@ -37,20 +39,26 @@ app.get('/health', (req, res) => {
     });
 });
 
+// STAGE 2
+
 app.get('/tasks', (req, res) => {
     res.status(200).send(tasks);
 });
 
 app.get('/tasks/:id', (req, res) => {
 
-    const task = tasks.find(item => item.id === Number(req.params.id));
+    const task = tasks.find(task => task.id === Number(req.params.id));
     
     if (!task) {
-        return res.status(400).send({error: `Task ${req.params.id} was not found`});
+        return res.status(404).send({
+            error: `Task ${req.params.id} not found`
+        });
     }
 
-    res.send(task);
+    res.status(200).send(task);
 });
+
+// STAGE 3
 
 app.post('/tasks', (req, res) => {
     const title = req.body.title?.trim();
@@ -68,7 +76,51 @@ app.post('/tasks', (req, res) => {
 
     tasks.push(newTask);
     
-    res.status(201).send(`Created: ${JSON.stringify(newTask)}`);
+    res.status(201).send(newTask);
+});
+
+// STAGE 4
+
+app.put('/tasks/:id', (req, res) => {
+    const id = Number(req.params.id);
+
+    if (!tasks.find(task => task.id === id)) {
+        return res.status(404).send();
+    }
+
+    if (Object.keys(req.body).length === 0) {
+        return res.status(400).send();
+    }
+    
+    const newTitle = req.body.title?.trim() ?? "";
+    const done = req.body.done;
+    
+    tasks = tasks.map(prev => {
+        if (prev.id === id) {
+            return ({
+                ...prev,
+                title: newTitle ? newTitle : prev.title,
+                done: done ?? prev.done
+            });
+        }
+        return prev;
+    });
+
+    const updatedTask = tasks.filter(task => task.id === id)
+
+    res.status(200).send(JSON.stringify(updatedTask));
+})
+
+app.delete('/tasks/:id', (req, res) => {
+    const id = Number(req.params.id);
+
+    if (!tasks.find(task => task.id === id)) {
+        return res.status(404).send(res.body);
+    }
+
+    tasks = tasks.filter(task => task.id !== id);
+
+    res.status(204).send(tasks);
 })
 
 app.listen(port, () => {
